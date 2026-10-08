@@ -204,9 +204,9 @@
         </div>
     </div>
 
-    <!-- Quick View Modal -->
+    <!-- Quick View Modal (Fixed Vertical Fit) -->
     <div id="quickViewModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md hidden">
-        <div class="bg-slate-900 border border-slate-700 rounded-2xl max-w-2xl w-full p-6 shadow-2xl relative max-h-[90vh] overflow-y-auto custom-scrollbar">
+        <div class="bg-slate-900 border border-slate-700 rounded-2xl max-w-3xl w-full p-6 shadow-2xl relative max-h-[92vh] overflow-y-auto custom-scrollbar">
             <button onclick="closeQuickViewModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-lg">
                 <i class="fa-solid fa-xmark"></i>
             </button>
@@ -301,7 +301,6 @@
                     <p class="text-[10px] text-slate-400 mb-2">कंप्यूटर से फ़ोटो चुनें या Postimages / Drive link पेस्ट करें:</p>
                     
                     <div class="space-y-2">
-                        <!-- Direct File Pick -->
                         <div class="flex items-center gap-2">
                             <label class="cursor-pointer bg-slate-700 hover:bg-slate-600 text-white px-3 py-1.5 rounded-lg text-xs font-medium flex items-center gap-1.5 transition">
                                 <i class="fa-solid fa-upload"></i> कंप्यूटर से फ़ोटो चुनें
@@ -316,7 +315,6 @@
                             <span class="flex-1 h-px bg-slate-700"></span>
                         </div>
 
-                        <!-- Link paste input -->
                         <input type="text" id="formPreviewImg" placeholder="Postimages.org Direct Link या Google Drive Link"
                                oninput="previewImgUrlChanged()"
                                class="w-full bg-slate-800 border border-slate-700 rounded-lg p-2 text-white focus:border-cyan-500 focus:outline-none text-xs">
@@ -324,7 +322,7 @@
 
                     <!-- Live Mini Preview -->
                     <div id="imageLivePreviewContainer" class="mt-2 hidden flex items-center gap-3 bg-slate-900/80 p-2 rounded-lg border border-slate-700/50">
-                        <img id="imageLivePreviewImg" src="" class="w-12 h-12 object-cover rounded border border-slate-700" onerror="handleImageError(this)">
+                        <img id="imageLivePreviewImg" src="" class="w-12 h-16 object-contain bg-slate-950 rounded border border-slate-700" onerror="handleImageError(this)">
                         <span class="text-[11px] text-emerald-400 font-medium"><i class="fa-solid fa-circle-check"></i> फ़ोटो प्रिव्यू लोड हो गया</span>
                     </div>
                 </div>
@@ -408,18 +406,17 @@
         let qrCodeInstance = null;
         let tempBase64Image = "";
 
-        // Smart Google Drive Image URL Converter
+        // Smart Direct URL Resolver
         function formatImageDirectUrl(url) {
             if (!url) return FALLBACK_IMAGE;
             if (url.startsWith("data:image")) return url;
 
-            // Google Drive formats resolver
             if (url.includes("drive.google.com")) {
                 const match1 = url.match(/\/d\/([a-zA-Z0-9_-]+)/);
                 const match2 = url.match(/id=([a-zA-Z0-9_-]+)/);
                 const fileId = match1 ? match1[1] : (match2 ? match2[1] : null);
                 if (fileId) {
-                    return `https://drive.google.com/thumbnail?id=${fileId}&sz=w800`;
+                    return `https://drive.google.com/thumbnail?id=${fileId}&sz=w1000`;
                 }
             }
             return url;
@@ -443,7 +440,7 @@
             try {
                 localStorage.setItem("stored_psd_frames", JSON.stringify(frameProducts));
             } catch (err) {
-                alert("चेतावनी: ब्राउज़र स्टोरेज भर गया है। कृपया कंप्यूटर से बहुत बड़ी फ़ोटो चुनने के बजाय 'postimages.org' का डायरेक्ट लिंक इस्तेमाल करें।");
+                alert("चेतावनी: स्टोरेज भर गया है। कृपया 'postimages.org' का डायरेक्ट लिंक इस्तेमाल करें।");
             }
         }
 
@@ -529,7 +526,6 @@
             }
         }
 
-        // Automatic Image Compression to protect LocalStorage
         function handleLocalImageSelect(e) {
             const file = e.target.files[0];
             if (!file) return;
@@ -541,7 +537,7 @@
                 const img = new Image();
                 img.onload = function() {
                     const canvas = document.createElement("canvas");
-                    const maxDim = 800;
+                    const maxDim = 900;
                     let width = img.width;
                     let height = img.height;
 
@@ -562,8 +558,7 @@
                     const ctx = canvas.getContext("2d");
                     ctx.drawImage(img, 0, 0, width, height);
 
-                    // Compress to lightweight web JPG
-                    tempBase64Image = canvas.toDataURL("image/jpeg", 0.75);
+                    tempBase64Image = canvas.toDataURL("image/jpeg", 0.8);
                     document.getElementById("formPreviewImg").value = "";
                     showLivePreview(tempBase64Image);
                 };
@@ -732,6 +727,7 @@
             filterFrames();
         }
 
+        // Updated Render: Exact Vertical/Horizontal Fit with object-contain
         function renderProducts(itemsToRender = frameProducts) {
             const grid = document.getElementById("productGrid");
             const noRes = document.getElementById("noResults");
@@ -745,20 +741,25 @@
 
             grid.innerHTML = itemsToRender.map(item => `
                 <div class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden hover:border-cyan-500/50 transition-all duration-300 shadow-lg flex flex-col group relative">
-                    <div class="relative aspect-[4/3] bg-slate-950 overflow-hidden cursor-pointer" onclick="openQuickView('${item.id}')">
-                        <img src="${formatImageDirectUrl(item.previewImg)}" alt="${item.title}" onerror="handleImageError(this)" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
-                        <span class="absolute top-3 left-3 bg-slate-900/90 text-cyan-400 border border-cyan-500/30 text-[10px] font-bold px-2 py-0.5 rounded-md backdrop-blur-sm">
+                    <!-- Vertical Fit Image Box (Height: 330px with contain) -->
+                    <div class="relative h-80 bg-slate-950 flex items-center justify-center p-2.5 overflow-hidden cursor-pointer" onclick="openQuickView('${item.id}')">
+                        <img src="${formatImageDirectUrl(item.previewImg)}" alt="${item.title}" onerror="handleImageError(this)" 
+                             class="max-h-full max-w-full object-contain rounded drop-shadow-md group-hover:scale-[1.03] transition-transform duration-300">
+                        
+                        <span class="absolute top-3 left-3 bg-slate-900/90 text-cyan-400 border border-cyan-500/30 text-[10px] font-bold px-2 py-0.5 rounded-md backdrop-blur-sm z-10">
                             <i class="fa-solid fa-layer-group mr-1"></i>.PSD
                         </span>
-                        <span class="absolute top-3 right-3 bg-slate-900/90 text-slate-300 text-[10px] font-medium px-2 py-0.5 rounded-md backdrop-blur-sm">
+                        <span class="absolute top-3 right-3 bg-slate-900/90 text-slate-300 text-[10px] font-medium px-2 py-0.5 rounded-md backdrop-blur-sm z-10">
                             <i class="fa-regular fa-image mr-1"></i>${item.photosCount} Photos
                         </span>
-                        <div class="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-3">
-                            <span class="text-xs text-cyan-300 font-medium"><i class="fa-solid fa-eye mr-1"></i>बड़ा प्रिव्यू देखें</span>
+                        
+                        <div class="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-3 pointer-events-none">
+                            <span class="text-xs text-cyan-300 font-medium"><i class="fa-solid fa-eye mr-1"></i>पूरा प्रिव्यू देखें</span>
                         </div>
                     </div>
 
-                    <div class="p-4 flex-1 flex flex-col justify-between">
+                    <!-- Details -->
+                    <div class="p-4 flex-1 flex flex-col justify-between border-t border-slate-800/60 bg-slate-900">
                         <div>
                             <span class="text-[11px] text-slate-400 font-medium">${item.category}</span>
                             <h3 class="text-sm font-semibold text-white group-hover:text-cyan-400 transition truncate mt-0.5" title="${item.title}">
@@ -771,6 +772,7 @@
                             </div>
                         </div>
 
+                        <!-- Price & Action Buttons -->
                         <div class="mt-4 pt-3 border-t border-slate-800/80 flex items-center justify-between gap-2">
                             <div>
                                 <span class="text-xs text-slate-500 block leading-none">कीमत</span>
@@ -863,7 +865,9 @@
                 total += item.price;
                 return `
                     <div class="flex items-center gap-3 bg-slate-800/50 p-3 rounded-xl border border-slate-700/60">
-                        <img src="${formatImageDirectUrl(item.previewImg)}" onerror="handleImageError(this)" class="w-14 h-14 object-cover rounded-lg">
+                        <div class="w-14 h-16 bg-slate-950 flex items-center justify-center p-1 rounded-lg">
+                            <img src="${formatImageDirectUrl(item.previewImg)}" class="max-h-full max-w-full object-contain">
+                        </div>
                         <div class="flex-1 min-w-0">
                             <h4 class="text-xs font-semibold text-white truncate">${item.title}</h4>
                             <span class="text-[11px] text-slate-400">₹${item.price} • ${item.photosCount} Photos</span>
@@ -960,6 +964,7 @@
             updateCartBadge();
         }
 
+        // Quick View with Vertical Full Aspect Fit
         function openQuickView(productId) {
             const item = frameProducts.find(p => p.id === productId);
             if (!item) return;
@@ -967,8 +972,9 @@
             const content = document.getElementById("quickViewContent");
             content.innerHTML = `
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
-                    <div class="rounded-xl overflow-hidden bg-slate-950 border border-slate-800">
-                        <img src="${formatImageDirectUrl(item.previewImg)}" alt="${item.title}" onerror="handleImageError(this)" class="w-full h-auto object-cover">
+                    <div class="rounded-xl overflow-hidden bg-slate-950 border border-slate-800 flex items-center justify-center p-3 h-[420px]">
+                        <img src="${formatImageDirectUrl(item.previewImg)}" alt="${item.title}" onerror="handleImageError(this)" 
+                             class="max-h-full max-w-full object-contain rounded drop-shadow-xl">
                     </div>
                     <div>
                         <span class="text-xs text-cyan-400 font-semibold uppercase tracking-wider">${item.category}</span>
