@@ -4,7 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Photoshop PSD Frame Store | Premium Templates</title>
+    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Razorpay Checkout SDK -->
     <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
@@ -44,7 +46,7 @@
             <div class="flex items-center gap-3">
                 <div class="relative hidden md:block w-64">
                     <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
-                    <input type="text" id="searchInput" oninput="filterFrames()" placeholder="फ्रेम खोजें..." 
+                    <input type="text" id="searchInput" oninput="filterFrames()" placeholder="फ्रेम या श्रेणी खोजें..." 
                            class="w-full bg-slate-800/80 border border-slate-700 rounded-lg pl-9 pr-4 py-2 text-sm text-white placeholder-slate-400 focus:outline-none focus:border-cyan-500">
                 </div>
                 
@@ -82,7 +84,7 @@
         </div>
     </div>
 
-    <!-- Hero Banner -->
+    <!-- Hero / Info Banner -->
     <section class="bg-gradient-to-b from-slate-900 to-slate-950 border-b border-slate-800 py-8 px-4 text-center">
         <div class="max-w-3xl mx-auto">
             <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 mb-3">
@@ -93,14 +95,15 @@
         </div>
     </section>
 
-    <!-- Categories -->
+    <!-- Categories Navigation -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 w-full">
         <div class="flex items-center gap-2 overflow-x-auto pb-2 custom-scrollbar text-sm" id="categoryContainer"></div>
     </div>
 
-    <!-- Product Grid -->
+    <!-- Product Grid Section -->
     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-1 w-full">
         <div id="productGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"></div>
+
         <div id="noResults" class="hidden text-center py-20">
             <i class="fa-regular fa-folder-open text-5xl text-slate-600 mb-3"></i>
             <p class="text-slate-400 text-base">कोई डिज़ाइन नहीं मिला।</p>
@@ -155,7 +158,7 @@
         </div>
     </div>
 
-    <!-- Quick View Modal -->
+    <!-- Quick View Modal (Full Vertical Fit) -->
     <div id="quickViewModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md hidden">
         <div class="bg-slate-900 border border-slate-700 rounded-2xl max-w-3xl w-full p-6 shadow-2xl relative max-h-[92vh] overflow-y-auto custom-scrollbar">
             <button onclick="closeQuickViewModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-lg">
@@ -165,7 +168,7 @@
         </div>
     </div>
 
-    <!-- Admin Login Modal -->
+    <!-- ADMIN LOGIN MODAL -->
     <div id="loginModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md hidden">
         <div class="bg-slate-900 border border-amber-500/40 rounded-2xl max-w-sm w-full p-6 shadow-2xl relative">
             <button onclick="closeLoginModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-lg">
@@ -176,10 +179,14 @@
                     <i class="fa-solid fa-lock text-xl"></i>
                 </div>
                 <h3 class="text-xl font-bold text-white">Admin Login</h3>
+                <p class="text-xs text-slate-400 mt-1">स्टोर मैनेज करने के लिए पासवर्ड डालें</p>
             </div>
             <form onsubmit="handleAdminLogin(event)" class="space-y-4">
-                <input type="password" id="adminPasswordInput" required placeholder="पासवर्ड दर्ज करें (admin123)"
-                       class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-amber-400">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-300 mb-1">Admin Password</label>
+                    <input type="password" id="adminPasswordInput" required placeholder="पासवर्ड दर्ज करें (default: admin123)"
+                           class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-amber-400">
+                </div>
                 <p id="loginErrorMsg" class="text-xs text-rose-400 hidden"></p>
                 <button type="submit" class="w-full bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold py-2.5 rounded-xl transition text-sm">
                     Login करें
@@ -188,46 +195,97 @@
         </div>
     </div>
 
-    <!-- Add/Edit Frame Modal -->
+    <!-- ADMIN: ADD / EDIT FRAME MODAL -->
     <div id="addFrameModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md hidden">
         <div class="bg-slate-900 border border-slate-700 rounded-2xl max-w-lg w-full p-6 shadow-2xl relative max-h-[90vh] overflow-y-auto custom-scrollbar">
             <button onclick="closeAddFrameModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-lg">
                 <i class="fa-solid fa-xmark"></i>
             </button>
-            <h3 id="formModalTitle" class="text-lg font-bold text-white mb-4">नया PSD फ़्रेम जोड़ें</h3>
-            <form onsubmit="handleSaveFrame(event)" class="space-y-3 text-xs">
+            <div class="mb-4">
+                <h3 id="formModalTitle" class="text-lg font-bold text-white flex items-center gap-2">
+                    <i class="fa-solid fa-plus-circle text-emerald-400"></i> नया PSD फ़्रेम जोड़ें
+                </h3>
+                <p class="text-xs text-slate-400">विवरण भरें, यह तुरंत आपकी वेबसाइट पर अपडेट हो जाएगा।</p>
+            </div>
+
+            <form onsubmit="handleSaveFrame(event)" class="space-y-3.5 text-xs">
                 <input type="hidden" id="editFrameId" value="">
-                <input type="text" id="formTitle" required placeholder="फ़्रेम का नाम" class="w-full bg-slate-800 border border-slate-700 rounded-lg p-2.5 text-white">
-                <div class="grid grid-cols-2 gap-3">
-                    <select id="formCategory" class="w-full bg-slate-800 border border-slate-700 rounded-lg p-2.5 text-white"></select>
-                    <input type="number" id="formPrice" required placeholder="कीमत (₹)" class="w-full bg-slate-800 border border-slate-700 rounded-lg p-2.5 text-white">
+
+                <div>
+                    <label class="block font-semibold text-slate-300 mb-1">फ़्रेम का नाम (Title)</label>
+                    <input type="text" id="formTitle" required placeholder="उदा: Frame 01 - Family Collage"
+                           class="w-full bg-slate-800 border border-slate-700 rounded-lg p-2.5 text-white focus:border-cyan-500 focus:outline-none">
                 </div>
+
                 <div class="grid grid-cols-2 gap-3">
-                    <input type="number" id="formPhotosCount" required placeholder="फ़ोटो स्लॉट" class="w-full bg-slate-800 border border-slate-700 rounded-lg p-2.5 text-white">
-                    <input type="text" id="formSize" required placeholder="साइज़ (12x18 Inch)" class="w-full bg-slate-800 border border-slate-700 rounded-lg p-2.5 text-white">
+                    <div>
+                        <!-- Custom Category Button Header -->
+                        <div class="flex items-center justify-between mb-1">
+                            <label class="font-semibold text-slate-300">कैटेगरी (Category)</label>
+                            <button type="button" onclick="promptAddNewCategory()" class="text-[10px] text-cyan-400 hover:underline">
+                                + नई जोड़ें
+                            </button>
+                        </div>
+                        <select id="formCategory" class="w-full bg-slate-800 border border-slate-700 rounded-lg p-2.5 text-white focus:border-cyan-500 focus:outline-none">
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block font-semibold text-slate-300 mb-1">कीमत (Price in ₹)</label>
+                        <input type="number" id="formPrice" required placeholder="49" value="49"
+                               class="w-full bg-slate-800 border border-slate-700 rounded-lg p-2.5 text-white focus:border-cyan-500 focus:outline-none">
+                    </div>
                 </div>
-                <input type="text" id="formPreviewImg" required placeholder="इमेज डायरेक्ट लिंक (Postimages.org)" class="w-full bg-slate-800 border border-slate-700 rounded-lg p-2.5 text-white">
-                <input type="url" id="formDriveUrl" required placeholder="PSD डाउनलोड लिंक (Google Drive)" class="w-full bg-slate-800 border border-slate-700 rounded-lg p-2.5 text-white">
-                <textarea id="formDescription" rows="2" placeholder="विवरण" class="w-full bg-slate-800 border border-slate-700 rounded-lg p-2.5 text-white"></textarea>
-                <button type="submit" class="w-full bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold py-2.5 rounded-xl text-sm">
-                    सेव और पब्लिश करें
+
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block font-semibold text-slate-300 mb-1">फ़ोटो स्लॉट (Photo Slots)</label>
+                        <input type="number" id="formPhotosCount" required placeholder="6" value="6"
+                               class="w-full bg-slate-800 border border-slate-700 rounded-lg p-2.5 text-white focus:border-cyan-500 focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="block font-semibold text-slate-300 mb-1">साइज़ (Size)</label>
+                        <input type="text" id="formSize" required placeholder="12x18 Inch" value="12x18 Inch"
+                               class="w-full bg-slate-800 border border-slate-700 rounded-lg p-2.5 text-white focus:border-cyan-500 focus:outline-none">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block font-semibold text-slate-300 mb-1">फ़ोटो प्रिव्यू URL (Postimages Direct Link या Google Drive Link)</label>
+                    <input type="text" id="formPreviewImg" required placeholder="https://i.postimg.cc/... या Google Drive share link"
+                           class="w-full bg-slate-800 border border-slate-700 rounded-lg p-2.5 text-white focus:border-cyan-500 focus:outline-none">
+                </div>
+
+                <div>
+                    <label class="block font-semibold text-slate-300 mb-1">PSD डाउनलोड लिंक (Google Drive PSD file link)</label>
+                    <input type="url" id="formDriveUrl" required placeholder="https://drive.google.com/file/d/.../view?usp=sharing"
+                           class="w-full bg-slate-800 border border-slate-700 rounded-lg p-2.5 text-white focus:border-cyan-500 focus:outline-none">
+                </div>
+
+                <div>
+                    <label class="block font-semibold text-slate-300 mb-1">विवरण (Description)</label>
+                    <textarea id="formDescription" rows="2" placeholder="इस फ़्रेम के बारे में जानकारी..."
+                              class="w-full bg-slate-800 border border-slate-700 rounded-lg p-2.5 text-white focus:border-cyan-500 focus:outline-none"></textarea>
+                </div>
+
+                <button type="submit" id="formSubmitBtn" class="w-full bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold py-2.5 rounded-xl transition text-sm flex items-center justify-center gap-2 mt-4">
+                    <i class="fa-solid fa-check"></i> फ़्रेम तुरंत सेव और पब्लिश करें
                 </button>
             </form>
         </div>
     </div>
 
     <script>
-        // CONFIGURATION: Aapki Razorpay Test Key ID set ho chuki hai
+        // CONFIGURATION: Aapki Razorpay Test Key ID set hai
         const STORE_CONFIG = {
-            razorpayKeyId: "rzp_test_Tldz59N829osf2", // <-- Set ho gaya!
+            razorpayKeyId: "rzp_test_Tldz59N829osf2",
             storeName: "PSD Frame Hub",
             adminPassword: "admin123"
         };
 
+        const initialCategories = ["Family Collage", "Love & Couple", "Birthday", "Wedding", "Kids & Baby"];
         const FALLBACK_IMAGE = "https://images.unsplash.com/photo-1542038784456-1ea8e935640e?w=600&q=80";
 
-        let customCategories = JSON.parse(localStorage.getItem("stored_categories")) || ["Family Collage", "Love & Couple", "Birthday"];
-        let frameProducts = JSON.parse(localStorage.getItem("stored_psd_frames")) || [
+        const initialFrames = [
             {
                 id: "frame-01",
                 title: "Frame 01 - Family Collage",
@@ -239,9 +297,35 @@
                 previewImg: "https://images.unsplash.com/photo-1511895426328-dc8714191300?w=600&q=80",
                 psdDriveUrl: "https://drive.google.com",
                 description: "प्रीमियम हाई-रेसोल्यूशन PSD टेम्पलेट।"
+            },
+            {
+                id: "frame-03",
+                title: "Frame Design (3) - Love You Collage",
+                category: "Love & Couple",
+                price: 49,
+                photosCount: 6,
+                resolution: "300 DPI",
+                size: "12x18 Inch",
+                previewImg: "https://images.unsplash.com/photo-1518199266791-5375a83190b7?auto=format&fit=crop&w=600&q=80",
+                psdDriveUrl: "https://drive.google.com",
+                description: "रोमांटिक थीम, 6 फ़ोटो कोलाज PSD फ़्रेम।"
+            },
+            {
+                id: "frame-13",
+                title: "Frame Design (13) - Cupid Arrow Heart",
+                category: "Love & Couple",
+                price: 59,
+                photosCount: 4,
+                resolution: "300 DPI",
+                size: "12x18 Inch",
+                previewImg: "https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?auto=format&fit=crop&w=600&q=80",
+                psdDriveUrl: "https://drive.google.com",
+                description: "क्यूपिड एरो (तीर-कमान) डिज़ाइन और स्मार्ट ऑब्जेक्ट इफ़ेक्ट्स।"
             }
         ];
 
+        let customCategories = JSON.parse(localStorage.getItem("stored_categories")) || initialCategories;
+        let frameProducts = JSON.parse(localStorage.getItem("stored_psd_frames")) || initialFrames;
         let isAdminLoggedIn = localStorage.getItem("is_admin_logged_in") === "true";
         let cart = [];
         let activeCategory = "All";
@@ -257,13 +341,153 @@
         function formatImageDirectUrl(url) {
             if (!url) return FALLBACK_IMAGE;
             if (url.includes("drive.google.com")) {
-                const m = url.match(/\/d\/([a-zA-Z0-9_-]+)/) || url.match(/id=([a-zA-Z0-9_-]+)/);
-                if (m) return `https://drive.google.com/thumbnail?id=${m[1]}&sz=w1000`;
+                const match1 = url.match(/\/d\/([a-zA-Z0-9_-]+)/);
+                const match2 = url.match(/id=([a-zA-Z0-9_-]+)/);
+                const fileId = match1 ? match1[1] : (match2 ? match2[1] : null);
+                if (fileId) {
+                    return `https://drive.google.com/thumbnail?id=${fileId}&sz=w1000`;
+                }
             }
             return url;
         }
 
-        // RAZORPAY AUTO-PAYMENT VERIFICATION CHECKOUT
+        function handleImageError(imgElement) {
+            if (imgElement.src !== FALLBACK_IMAGE) {
+                imgElement.src = FALLBACK_IMAGE;
+            }
+        }
+
+        function saveProductsToStorage() {
+            localStorage.setItem("stored_psd_frames", JSON.stringify(frameProducts));
+        }
+
+        function saveCategoriesToStorage() {
+            localStorage.setItem("stored_categories", JSON.stringify(customCategories));
+        }
+
+        // Custom Category Functionality
+        function populateCategorySelect(selectedCategory = null) {
+            const select = document.getElementById("formCategory");
+            select.innerHTML = customCategories.map(cat => `
+                <option value="${cat}" ${selectedCategory === cat ? 'selected' : ''}>${cat}</option>
+            `).join("");
+        }
+
+        function promptAddNewCategory() {
+            const newCat = prompt("नई कैटेगरी का नाम दर्ज करें (जैसे: Collage, Velvet Frame आदि):");
+            if (newCat && newCat.trim() !== "") {
+                const trimmed = newCat.trim();
+                if (!customCategories.includes(trimmed)) {
+                    customCategories.push(trimmed);
+                    saveCategoriesToStorage();
+                    populateCategorySelect(trimmed);
+                    renderCategories();
+                    alert(`कैटेगरी "${trimmed}" सफलतापूर्वक जोड़ दी गई!`);
+                } else {
+                    populateCategorySelect(trimmed);
+                }
+            }
+        }
+
+        function renderCategories() {
+            const allCategoriesInProducts = frameProducts.map(p => p.category);
+            const combinedCats = ["All", ...new Set([...customCategories, ...allCategoriesInProducts])];
+            
+            const container = document.getElementById("categoryContainer");
+            container.innerHTML = combinedCats.map(cat => `
+                <button onclick="selectCategory('${cat}')" 
+                        class="px-4 py-2 rounded-xl whitespace-nowrap transition font-medium border text-xs ${activeCategory === cat ? 'bg-cyan-500 text-slate-950 border-cyan-400 font-bold' : 'bg-slate-800/80 text-slate-300 border-slate-700 hover:border-slate-600'}">
+                    ${cat === "All" ? "सभी फ़्रेम (All)" : cat}
+                </button>
+            `).join("");
+        }
+
+        function selectCategory(category) {
+            activeCategory = category;
+            renderCategories();
+            filterFrames();
+        }
+
+        // Product Cards with Vertical Exact Fit (object-contain)
+        function renderProducts(itemsToRender = frameProducts) {
+            const grid = document.getElementById("productGrid");
+            const noRes = document.getElementById("noResults");
+
+            if (itemsToRender.length === 0) {
+                grid.innerHTML = "";
+                noRes.classList.remove("hidden");
+                return;
+            }
+            noRes.classList.add("hidden");
+
+            grid.innerHTML = itemsToRender.map(item => `
+                <div class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden hover:border-cyan-500/50 transition-all duration-300 shadow-lg flex flex-col group relative">
+                    <!-- Vertical Fit Image Box (Height: 320px with contain)[cite: 4, 5] -->
+                    <div class="relative h-80 bg-slate-950 flex items-center justify-center p-2.5 overflow-hidden cursor-pointer" onclick="openQuickView('${item.id}')">
+                        <img src="${formatImageDirectUrl(item.previewImg)}" alt="${item.title}" onerror="handleImageError(this)" 
+                             class="max-h-full max-w-full object-contain rounded drop-shadow-md group-hover:scale-[1.03] transition-transform duration-300">
+                        
+                        <span class="absolute top-3 left-3 bg-slate-900/90 text-cyan-400 border border-cyan-500/30 text-[10px] font-bold px-2 py-0.5 rounded-md backdrop-blur-sm z-10">
+                            <i class="fa-solid fa-layer-group mr-1"></i>.PSD
+                        </span>
+                        <span class="absolute top-3 right-3 bg-slate-900/90 text-slate-300 text-[10px] font-medium px-2 py-0.5 rounded-md backdrop-blur-sm z-10">
+                            <i class="fa-regular fa-image mr-1"></i>${item.photosCount} Photos
+                        </span>
+                        
+                        <div class="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-3 pointer-events-none">
+                            <span class="text-xs text-cyan-300 font-medium"><i class="fa-solid fa-eye mr-1"></i>पूरा प्रिव्यू देखें</span>
+                        </div>
+                    </div>
+
+                    <!-- Details -->
+                    <div class="p-4 flex-1 flex flex-col justify-between border-t border-slate-800/60 bg-slate-900">
+                        <div>
+                            <span class="text-[11px] text-slate-400 font-medium">${item.category}</span>
+                            <h3 class="text-sm font-semibold text-white group-hover:text-cyan-400 transition truncate mt-0.5" title="${item.title}">
+                                ${item.title}
+                            </h3>
+                            <div class="flex items-center gap-2 mt-2 text-[11px] text-slate-400">
+                                <span><i class="fa-solid fa-ruler-combined text-slate-500 mr-1"></i>${item.size}</span>
+                                <span>•</span>
+                                <span><i class="fa-solid fa-gauge-high text-slate-500 mr-1"></i>${item.resolution}</span>
+                            </div>
+                        </div>
+
+                        <!-- Price & Action Buttons -->
+                        <div class="mt-4 pt-3 border-t border-slate-800/80 flex items-center justify-between gap-2">
+                            <div>
+                                <span class="text-xs text-slate-500 block leading-none">कीमत</span>
+                                <span class="text-lg font-bold text-white">₹${item.price}</span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <button onclick="addToCart('${item.id}')" title="कार्ट में जोड़ें" class="p-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition">
+                                    <i class="fa-solid fa-cart-plus text-sm"></i>
+                                </button>
+                                <button onclick="buyNowSingle('${item.id}')" class="px-3.5 py-2 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-xs transition shadow-md shadow-cyan-500/10">
+                                    Buy Now
+                                </button>
+                            </div>
+                        </div>
+
+                        ${isAdminLoggedIn ? `
+                            <div class="mt-3 pt-2 border-t border-dashed border-amber-500/30 flex justify-between items-center text-xs">
+                                <span class="text-amber-400 text-[10px] font-semibold"><i class="fa-solid fa-shield"></i> Admin Control</span>
+                                <div class="flex items-center gap-2">
+                                    <button onclick="openEditFrameModal('${item.id}')" class="text-cyan-400 hover:text-cyan-300 font-medium text-xs flex items-center gap-1 bg-cyan-950/40 px-2 py-0.5 rounded border border-cyan-800/40">
+                                        <i class="fa-solid fa-pen-to-square"></i> Edit
+                                    </button>
+                                    <button onclick="deleteFrame('${item.id}')" class="text-rose-400 hover:text-rose-300 font-medium text-xs flex items-center gap-1 bg-rose-950/40 px-2 py-0.5 rounded border border-rose-800/40">
+                                        <i class="fa-solid fa-trash"></i> Delete
+                                    </button>
+                                </div>
+                            </div>
+                        ` : ''}
+                    </div>
+                </div>
+            `).join("");
+        }
+
+        // Razorpay Verified Checkout Logic
         function initiateRazorpayCheckout(singleProduct = null) {
             const itemsToBuy = singleProduct ? [singleProduct] : [...cart];
             if (itemsToBuy.length === 0) return;
@@ -272,12 +496,11 @@
 
             const options = {
                 "key": STORE_CONFIG.razorpayKeyId,
-                "amount": totalAmount * 100, // Paise mein amount (e.g. ₹5 = 500 paise)
+                "amount": totalAmount * 100, // Paise me (₹5 = 500 paise)
                 "currency": "INR",
                 "name": STORE_CONFIG.storeName,
                 "description": itemsToBuy.length === 1 ? itemsToBuy[0].title : `${itemsToBuy.length} Frames Combo`,
                 "handler": function (response) {
-                    // Payment successful hone par turant ye function chalega
                     onPaymentSuccess(response.razorpay_payment_id, itemsToBuy);
                 },
                 "prefill": {
@@ -301,7 +524,7 @@
                 <div class="bg-slate-800 border border-slate-700 p-3 rounded-xl flex items-center justify-between text-left">
                     <div class="truncate mr-2">
                         <span class="text-xs font-semibold text-white block truncate">${item.title}</span>
-                        <span class="text-[10px] text-cyan-400">High-Res .PSD (300 DPI)</span>
+                        <span class="text-[10px] text-cyan-400">High-Res Layered .PSD (300 DPI)</span>
                     </div>
                     <a href="${item.psdDriveUrl}" target="_blank" download class="bg-emerald-500 hover:bg-emerald-400 text-slate-950 px-3.5 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5 whitespace-nowrap">
                         <i class="fa-solid fa-download"></i> डाउनलोड करें
@@ -318,109 +541,145 @@
             document.getElementById("downloadModal").classList.add("hidden");
         }
 
-        // Render Cards (Vertical fit)
-        function renderProducts(itemsToRender = frameProducts) {
-            const grid = document.getElementById("productGrid");
-            grid.innerHTML = itemsToRender.map(item => `
-                <div class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden hover:border-cyan-500/50 transition duration-300 shadow-lg flex flex-col group">
-                    <div class="relative h-80 bg-slate-950 flex items-center justify-center p-2.5 overflow-hidden cursor-pointer" onclick="openQuickView('${item.id}')">
-                        <img src="${formatImageDirectUrl(item.previewImg)}" class="max-h-full max-w-full object-contain rounded drop-shadow-md">
-                        <span class="absolute top-3 left-3 bg-slate-900/90 text-cyan-400 text-[10px] font-bold px-2 py-0.5 rounded">.PSD</span>
-                    </div>
-                    <div class="p-4 flex-1 flex flex-col justify-between">
-                        <div>
-                            <span class="text-[11px] text-slate-400">${item.category}</span>
-                            <h3 class="text-sm font-semibold text-white truncate">${item.title}</h3>
-                        </div>
-                        <div class="mt-4 pt-3 border-t border-slate-800 flex items-center justify-between">
-                            <span class="text-lg font-bold text-white">₹${item.price}</span>
-                            <div class="flex gap-2">
-                                <button onclick="addToCart('${item.id}')" class="p-2.5 bg-slate-800 rounded-xl text-slate-200"><i class="fa-solid fa-cart-plus"></i></button>
-                                <button onclick="buyNowSingle('${item.id}')" class="px-3.5 py-2 bg-cyan-500 text-slate-950 font-bold text-xs rounded-xl">Buy Now</button>
-                            </div>
-                        </div>
-                        ${isAdminLoggedIn ? `
-                            <div class="mt-2 pt-2 border-t border-dashed border-amber-500/30 flex justify-between text-xs">
-                                <button onclick="openEditFrameModal('${item.id}')" class="text-cyan-400">Edit</button>
-                                <button onclick="deleteFrame('${item.id}')" class="text-rose-400">Delete</button>
-                            </div>
-                        ` : ''}
-                    </div>
-                </div>
-            `).join("");
-        }
-
-        function buyNowSingle(id) {
-            const product = frameProducts.find(p => p.id === id);
+        function buyNowSingle(productId) {
+            const product = frameProducts.find(p => p.id === productId);
             if (product) initiateRazorpayCheckout(product);
         }
 
-        function addToCart(id) {
-            const product = frameProducts.find(p => p.id === id);
-            if (product && !cart.find(i => i.id === id)) cart.push(product);
+        // Cart Actions
+        function addToCart(productId) {
+            const product = frameProducts.find(p => p.id === productId);
+            if (!product) return;
+
+            const existing = cart.find(item => item.id === productId);
+            if (!existing) {
+                cart.push(product);
+            }
             updateCartBadge();
             renderCartItems();
             toggleCartDrawer(true);
         }
 
-        function removeFromCart(id) {
-            cart = cart.filter(i => i.id !== id);
+        function removeFromCart(productId) {
+            cart = cart.filter(item => item.id !== productId);
             updateCartBadge();
             renderCartItems();
         }
 
         function updateCartBadge() {
-            document.getElementById("cartCountBadge").innerText = cart.length;
-            document.getElementById("cartTotalItems").innerText = cart.length;
+            const badge = document.getElementById("cartCountBadge");
+            const totalItemsSpan = document.getElementById("cartTotalItems");
+            badge.innerText = cart.length;
+            totalItemsSpan.innerText = cart.length;
+            document.getElementById("cartCheckoutBtn").disabled = cart.length === 0;
         }
 
         function renderCartItems() {
             const list = document.getElementById("cartItemList");
+            const totalPriceEl = document.getElementById("cartTotalPrice");
+
+            if (cart.length === 0) {
+                list.innerHTML = `
+                    <div class="text-center py-16 text-slate-500">
+                        <i class="fa-solid fa-basket-shopping text-4xl mb-3"></i>
+                        <p class="text-sm">आपकी कार्ट खाली है।</p>
+                    </div>
+                `;
+                totalPriceEl.innerText = "₹0";
+                return;
+            }
+
             let total = 0;
             list.innerHTML = cart.map(item => {
                 total += item.price;
                 return `
-                    <div class="flex items-center gap-3 bg-slate-800/50 p-3 rounded-xl">
-                        <img src="${formatImageDirectUrl(item.previewImg)}" class="w-12 h-12 object-contain bg-slate-950 rounded">
+                    <div class="flex items-center gap-3 bg-slate-800/50 p-3 rounded-xl border border-slate-700/60">
+                        <div class="w-14 h-16 bg-slate-950 flex items-center justify-center p-1 rounded-lg">
+                            <img src="${formatImageDirectUrl(item.previewImg)}" class="max-h-full max-w-full object-contain">
+                        </div>
                         <div class="flex-1 min-w-0">
                             <h4 class="text-xs font-semibold text-white truncate">${item.title}</h4>
-                            <span class="text-[11px] text-slate-400">₹${item.price}</span>
+                            <span class="text-[11px] text-slate-400">₹${item.price} • ${item.photosCount} Photos</span>
                         </div>
-                        <button onclick="removeFromCart('${item.id}')" class="text-rose-400"><i class="fa-solid fa-trash"></i></button>
+                        <button onclick="removeFromCart('${item.id}')" class="text-rose-400 hover:text-rose-300 p-2 text-sm">
+                            <i class="fa-regular fa-trash-can"></i>
+                        </button>
                     </div>
                 `;
             }).join("");
-            document.getElementById("cartTotalPrice").innerText = "₹" + total;
+
+            totalPriceEl.innerText = `₹${total}`;
         }
 
-        function toggleCartDrawer(open = null) {
-            const d = document.getElementById("cartDrawer");
-            if (open === true) d.classList.remove("hidden");
-            else if (open === false) d.classList.add("hidden");
-            else d.classList.toggle("hidden");
+        function toggleCartDrawer(forceOpen = null) {
+            const drawer = document.getElementById("cartDrawer");
+            if (forceOpen === true) drawer.classList.remove("hidden");
+            else if (forceOpen === false) drawer.classList.add("hidden");
+            else drawer.classList.toggle("hidden");
+            renderCartItems();
         }
 
+        function filterFrames() {
+            const query = document.getElementById("searchInput").value.toLowerCase().trim();
+            const filtered = frameProducts.filter(item => {
+                const matchCat = (activeCategory === "All" || item.category === activeCategory);
+                const matchQuery = item.title.toLowerCase().includes(query) || 
+                                   item.category.toLowerCase().includes(query) ||
+                                   item.description.toLowerCase().includes(query);
+                return matchCat && matchQuery;
+            });
+            renderProducts(filtered);
+        }
+
+        // Admin Management
         function syncAdminUI() {
-            const b = document.getElementById("adminBar");
-            if (isAdminLoggedIn) b.classList.remove("hidden");
-            else b.classList.add("hidden");
+            const adminBar = document.getElementById("adminBar");
+            const adminNavAction = document.getElementById("adminNavAction");
+
+            if (isAdminLoggedIn) {
+                adminBar.classList.remove("hidden");
+                adminNavAction.innerHTML = `
+                    <button onclick="adminLogout()" class="bg-rose-950/60 hover:bg-rose-900 text-rose-300 border border-rose-800 px-3 py-2 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition">
+                        <i class="fa-solid fa-right-from-bracket"></i> Logout
+                    </button>
+                `;
+            } else {
+                adminBar.classList.add("hidden");
+                adminNavAction.innerHTML = `
+                    <button onclick="openLoginModal()" class="bg-slate-800 hover:bg-slate-700 text-amber-400 border border-amber-500/30 px-3.5 py-2 rounded-lg flex items-center gap-2 text-sm transition font-medium">
+                        <i class="fa-solid fa-lock"></i>
+                        <span class="hidden sm:inline">Admin Login</span>
+                    </button>
+                `;
+            }
         }
 
-        function openLoginModal() { document.getElementById("loginModal").classList.remove("hidden"); }
-        function closeLoginModal() { document.getElementById("loginModal").classList.add("hidden"); }
+        function openLoginModal() {
+            document.getElementById("loginErrorMsg").classList.add("hidden");
+            document.getElementById("adminPasswordInput").value = "";
+            document.getElementById("loginModal").classList.remove("hidden");
+        }
+
+        function closeLoginModal() {
+            document.getElementById("loginModal").classList.add("hidden");
+        }
+
         function handleAdminLogin(e) {
             e.preventDefault();
-            if (document.getElementById("adminPasswordInput").value === STORE_CONFIG.adminPassword) {
+            const pass = document.getElementById("adminPasswordInput").value;
+            if (pass === STORE_CONFIG.adminPassword) {
                 isAdminLoggedIn = true;
                 localStorage.setItem("is_admin_logged_in", "true");
                 closeLoginModal();
                 syncAdminUI();
                 renderProducts();
             } else {
-                document.getElementById("loginErrorMsg").innerText = "गलत पासवर्ड!";
-                document.getElementById("loginErrorMsg").classList.remove("hidden");
+                const err = document.getElementById("loginErrorMsg");
+                err.innerText = "गलत पासवर्ड! कृपया सही पासवर्ड दर्ज करें।";
+                err.classList.remove("hidden");
             }
         }
+
         function adminLogout() {
             isAdminLoggedIn = false;
             localStorage.removeItem("is_admin_logged_in");
@@ -428,30 +687,11 @@
             renderProducts();
         }
 
-        function populateCategorySelect() {
-            document.getElementById("formCategory").innerHTML = customCategories.map(c => `<option value="${c}">${c}</option>`).join("");
-        }
-
-        function renderCategories() {
-            const cats = ["All", ...new Set([...customCategories, ...frameProducts.map(p => p.category)])];
-            document.getElementById("categoryContainer").innerHTML = cats.map(cat => `
-                <button onclick="selectCategory('${cat}')" class="px-4 py-2 rounded-xl text-xs border ${activeCategory === cat ? 'bg-cyan-500 text-slate-950 font-bold' : 'bg-slate-800 text-slate-300'}">${cat}</button>
-            `).join("");
-        }
-
-        function selectCategory(c) {
-            activeCategory = c;
-            renderCategories();
-            filterFrames();
-        }
-
-        function filterFrames() {
-            const q = document.getElementById("searchInput").value.toLowerCase();
-            renderProducts(frameProducts.filter(p => (activeCategory === "All" || p.category === activeCategory) && p.title.toLowerCase().includes(q)));
-        }
-
         function openAddFrameModal() {
+            document.getElementById("formModalTitle").innerHTML = `<i class="fa-solid fa-plus-circle text-emerald-400"></i> नया PSD फ़्रेम जोड़ें`;
+            document.getElementById("formSubmitBtn").innerHTML = `<i class="fa-solid fa-check"></i> फ़्रेम तुरंत सेव और पब्लिश करें`;
             document.getElementById("editFrameId").value = "";
+            
             document.getElementById("formTitle").value = "";
             document.getElementById("formPrice").value = "49";
             document.getElementById("formPhotosCount").value = "6";
@@ -459,13 +699,19 @@
             document.getElementById("formPreviewImg").value = "";
             document.getElementById("formDriveUrl").value = "";
             document.getElementById("formDescription").value = "";
+
+            populateCategorySelect();
             document.getElementById("addFrameModal").classList.remove("hidden");
         }
 
         function openEditFrameModal(id) {
             const item = frameProducts.find(p => p.id === id);
             if (!item) return;
+
+            document.getElementById("formModalTitle").innerHTML = `<i class="fa-solid fa-pen-to-square text-amber-400"></i> फ़्रेम एडिट करें (Edit Product)`;
+            document.getElementById("formSubmitBtn").innerHTML = `<i class="fa-solid fa-arrows-rotate"></i> बदलाव सेव करें (Update Frame)`;
             document.getElementById("editFrameId").value = item.id;
+
             document.getElementById("formTitle").value = item.title;
             document.getElementById("formPrice").value = item.price;
             document.getElementById("formPhotosCount").value = item.photosCount;
@@ -473,65 +719,121 @@
             document.getElementById("formPreviewImg").value = item.previewImg;
             document.getElementById("formDriveUrl").value = item.psdDriveUrl;
             document.getElementById("formDescription").value = item.description;
+
+            if (!customCategories.includes(item.category)) {
+                customCategories.push(item.category);
+                saveCategoriesToStorage();
+            }
+            populateCategorySelect(item.category);
+
             document.getElementById("addFrameModal").classList.remove("hidden");
         }
 
-        function closeAddFrameModal() { document.getElementById("addFrameModal").classList.add("hidden"); }
+        function closeAddFrameModal() {
+            document.getElementById("addFrameModal").classList.add("hidden");
+        }
 
         function handleSaveFrame(e) {
             e.preventDefault();
             const editId = document.getElementById("editFrameId").value;
-            const data = {
-                title: document.getElementById("formTitle").value.trim(),
-                category: document.getElementById("formCategory").value,
-                price: Number(document.getElementById("formPrice").value),
-                photosCount: Number(document.getElementById("formPhotosCount").value),
-                size: document.getElementById("formSize").value.trim(),
-                previewImg: document.getElementById("formPreviewImg").value.trim(),
-                psdDriveUrl: document.getElementById("formDriveUrl").value.trim(),
-                description: document.getElementById("formDescription").value.trim()
-            };
+            const chosenCategory = document.getElementById("formCategory").value;
+            const previewUrl = document.getElementById("formPreviewImg").value.trim();
 
             if (editId) {
-                const idx = frameProducts.findIndex(p => p.id === editId);
-                frameProducts[idx] = { ...frameProducts[idx], ...data };
+                const index = frameProducts.findIndex(p => p.id === editId);
+                if (index !== -1) {
+                    frameProducts[index] = {
+                        ...frameProducts[index],
+                        title: document.getElementById("formTitle").value.trim(),
+                        category: chosenCategory,
+                        price: Number(document.getElementById("formPrice").value),
+                        photosCount: Number(document.getElementById("formPhotosCount").value),
+                        size: document.getElementById("formSize").value.trim(),
+                        previewImg: previewUrl,
+                        psdDriveUrl: document.getElementById("formDriveUrl").value.trim(),
+                        description: document.getElementById("formDescription").value.trim() || "प्रीमियम हाई-रेसोल्यूशन PSD टेम्पलेट।"
+                    };
+                    alert("फ़्रेम सफलतापूर्वक अपडेट हो गया!");
+                }
             } else {
-                frameProducts.unshift({ id: "frame-" + Date.now(), resolution: "300 DPI", ...data });
+                const newFrame = {
+                    id: "frame-" + Date.now(),
+                    title: document.getElementById("formTitle").value.trim(),
+                    category: chosenCategory,
+                    price: Number(document.getElementById("formPrice").value),
+                    photosCount: Number(document.getElementById("formPhotosCount").value),
+                    resolution: "300 DPI",
+                    size: document.getElementById("formSize").value.trim(),
+                    previewImg: previewUrl,
+                    psdDriveUrl: document.getElementById("formDriveUrl").value.trim(),
+                    description: document.getElementById("formDescription").value.trim() || "प्रीमियम हाई-रेसोल्यूशन PSD टेम्पलेट।"
+                };
+                frameProducts.unshift(newFrame);
+                alert("नया फ़्रेम सफलतापूर्वक जोड़ दिया गया!");
             }
 
-            localStorage.setItem("stored_psd_frames", JSON.stringify(frameProducts));
+            saveProductsToStorage();
             closeAddFrameModal();
+            renderCategories();
             renderProducts();
         }
 
         function deleteFrame(id) {
-            if (confirm("Delete karna chahte hain?")) {
-                frameProducts = frameProducts.filter(p => p.id !== id);
-                localStorage.setItem("stored_psd_frames", JSON.stringify(frameProducts));
+            if (confirm("क्या आप वाकई इस फ़्रेम को हटाना चाहते हैं?")) {
+                frameProducts = frameProducts.filter(item => item.id !== id);
+                saveProductsToStorage();
+                renderCategories();
                 renderProducts();
             }
         }
 
-        function openQuickView(id) {
-            const item = frameProducts.find(p => p.id === id);
+        // Quick View (Full Vertical Fit Modal)[cite: 5]
+        function openQuickView(productId) {
+            const item = frameProducts.find(p => p.id === productId);
             if (!item) return;
-            document.getElementById("quickViewContent").innerHTML = `
+
+            const content = document.getElementById("quickViewContent");
+            content.innerHTML = `
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
-                    <div class="h-96 bg-slate-950 flex items-center justify-center p-3 rounded-xl">
-                        <img src="${formatImageDirectUrl(item.previewImg)}" class="max-h-full max-w-full object-contain">
+                    <div class="rounded-xl overflow-hidden bg-slate-950 border border-slate-800 flex items-center justify-center p-3 h-[420px]">
+                        <img src="${formatImageDirectUrl(item.previewImg)}" alt="${item.title}" onerror="handleImageError(this)" 
+                             class="max-h-full max-w-full object-contain rounded drop-shadow-xl">
                     </div>
                     <div>
-                        <span class="text-xs text-cyan-400 font-bold">${item.category}</span>
-                        <h2 class="text-xl font-bold text-white mt-1">${item.title}</h2>
-                        <p class="text-xs text-slate-400 mt-2">${item.description}</p>
-                        <div class="text-2xl font-black text-cyan-400 my-4">₹${item.price}</div>
-                        <button onclick="closeQuickViewModal(); buyNowSingle('${item.id}')" class="w-full py-3 bg-cyan-500 text-slate-950 font-bold rounded-xl text-sm">अभी ख़रीदें (Razorpay Secure)</button>
+                        <span class="text-xs text-cyan-400 font-semibold uppercase tracking-wider">${item.category}</span>
+                        <h2 class="text-xl font-bold text-white mt-1 mb-2">${item.title}</h2>
+                        <p class="text-xs text-slate-400 leading-relaxed mb-4">${item.description}</p>
+                        
+                        <div class="grid grid-cols-2 gap-2 text-xs text-slate-300 mb-6 bg-slate-800/60 p-3 rounded-xl border border-slate-700/60">
+                            <div><strong>फ़ोटो स्लॉट:</strong> ${item.photosCount} फ़ोटो</div>
+                            <div><strong>साइज़:</strong> ${item.size}</div>
+                            <div><strong>रिज़ॉल्यूशन:</strong> ${item.resolution}</div>
+                            <div><strong>फ़ॉर्मेट:</strong> Adobe PSD</div>
+                        </div>
+
+                        <div class="flex items-center justify-between gap-4 pt-2">
+                            <div>
+                                <span class="text-xs text-slate-400 block">कीमत:</span>
+                                <span class="text-2xl font-black text-cyan-400">₹${item.price}</span>
+                            </div>
+                            <div class="flex gap-2">
+                                <button onclick="addToCart('${item.id}'); closeQuickViewModal();" class="px-4 py-2.5 bg-slate-800 hover:bg-slate-700 text-white rounded-xl text-xs font-semibold border border-slate-700 transition">
+                                    कार्ट में जोड़ें
+                                </button>
+                                <button onclick="closeQuickViewModal(); buyNowSingle('${item.id}');" class="px-5 py-2.5 bg-cyan-500 hover:bg-cyan-400 text-slate-950 rounded-xl text-xs font-bold transition shadow-md shadow-cyan-500/20">
+                                    अभी ख़रीदें (Razorpay Secure)
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             `;
             document.getElementById("quickViewModal").classList.remove("hidden");
         }
-        function closeQuickViewModal() { document.getElementById("quickViewModal").classList.add("hidden"); }
+
+        function closeQuickViewModal() {
+            document.getElementById("quickViewModal").classList.add("hidden");
+        }
     </script>
 </body>
 </html>
